@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="d-flex justify-content-center d-block p-3 bg-dark text-white">
+    <h3>{{user.username}}의 Profile Update</h3>
+</div>
+<div class="container">
+    <div class="d-flex justify-content-center">
+            {% if error_msg %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error</strong> {{error_msg}}
+            </div>
+            {% endif %}
+            <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                </br>
+                {{ user_form | crispy }}
+                {{ profile_form  | crispy }}
+                <br/>
+                <div class="d-flex justify-content-center">
+                    <input class="btn btn-dark" type="submit" value="Update" />
+                </div>
+            </form>
+        </p>
+    </div>
+</div>
+</br>
+{% endblock %}

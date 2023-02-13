@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    </br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <p><img src="{{ object.image.url }}" class="img-thumbnail"></p>
+            </div>
+            <div class="col-8">
+                <div class="col">
+                    <h3>{{ object.name }}</h3>
+                    <hr />
+                    <p>{{ object.price }} 원</p>
+                    <p>{{ object.description }}</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'carts:add_cart' product_id=object.id %}"><button type="button" class="btn btn-outline-dark">장바구니</button></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    <div class="text-center"><img src="{{ object.detail_image.url }}"></div>
+    </br>
+{% endblock %}
