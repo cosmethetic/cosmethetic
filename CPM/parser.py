@@ -1,7 +1,7 @@
 import argparse
 
 
-def get_args():
+def get_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint_pattern", default="./CPM/checkpoints/pattern.pth", type=str)
     parser.add_argument("--checkpoint_color", default="./CPM/checkpoints/color.pth", type=str)
@@ -25,9 +25,9 @@ def get_args():
     )
     parser.add_argument("--alpha", type=float, default=0.5, help="opacity of color makeup")
     parser.add_argument("--savedir", type=str, default=".")
-    parser.add_argument("--filename", type=str)
+    parser.add_argument("--filename", type=str, default="-")
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     print("           ⊱ ──────ஓ๑♡๑ஓ ────── ⊰")
     print("🎵 hhey, arguments are here if you need to check 🎵")

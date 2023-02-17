@@ -3,7 +3,7 @@ import os
 import numpy as np
 from skimage.io import imread
 from skimage.transform import estimate_transform, warp
-from utils.predictor import PosPrediction
+from CPM.utils.predictor import PosPrediction
 
 
 class PRN:

@@ -24,19 +24,27 @@ def pattern_makeup(A_txt, B_txt, render_texture=False):
     return pattern
 
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     args = get_args()
+    
+    t1 = time.perf_counter()
     model = Makeup(args)
+    t2 = time.perf_counter()
+    print(f'model loading time: {1000*(t2-t1):.4f}ms')
 
     imgA = np.array(Image.open(args.input))
     imgB = np.array(Image.open(args.style))
     imgB = cv2.resize(imgB, (256, 256))
 
+    t1 = time.perf_counter()
     model.prn_process(imgA)
     A_txt = model.get_texture()
     B_txt = model.prn_process_target(imgB)
+    t2 = time.perf_counter()
+    print(f'preprocessing time: {1000*(t2-t1):.4f}ms')
 
+    t1 = time.perf_counter()
     if args.color_only:
         output = color_makeup(A_txt, B_txt, args.alpha)
     elif args.pattern_only:
@@ -48,7 +56,9 @@ if __name__ == "__main__":
         new_txt = color_txt * (1 - mask)[:, :, np.newaxis] + B_txt * mask[:, :, np.newaxis]
         output = model.render_texture(new_txt)
         output = model.blend_imgs(model.face, output, alpha=1)
-
+    t2 = time.perf_counter()
+    print(f'inference time: {1000*(t2-t1):.4f}ms')
+    
     # Restore its original size
     H, W, C = imgA.shape
     output = cv2.resize(output, (W, H))

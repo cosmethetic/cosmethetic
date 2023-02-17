@@ -2,14 +2,14 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import torch
-import utils.net as net
+import CPM.utils.net as net
 from blend_modes import darken_only, hard_light, normal
 from PIL import Image
 from torchvision import transforms
-from utils.api import PRN
-from utils.models import Segmentor
-from utils.render import prepare_tri_weights, render_by_tri, render_texture
-from utils.utils import de_norm, to_tensor, to_var
+from CPM.utils.api import PRN
+from CPM.utils.models import Segmentor
+from CPM.utils.render import prepare_tri_weights, render_by_tri, render_texture
+from CPM.utils.utils import de_norm, to_tensor, to_var
 
 
 class Makeup:
