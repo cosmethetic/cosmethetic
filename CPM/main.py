@@ -6,6 +6,7 @@ import numpy as np
 from makeup import Makeup
 from PIL import Image
 
+import time
 
 def color_makeup(A_txt, B_txt, alpha):
     color_txt = model.makeup(A_txt, B_txt)
@@ -47,6 +48,10 @@ if __name__ == "__main__":
         new_txt = color_txt * (1 - mask)[:, :, np.newaxis] + B_txt * mask[:, :, np.newaxis]
         output = model.render_texture(new_txt)
         output = model.blend_imgs(model.face, output, alpha=1)
+
+    # Restore its original size
+    H, W, C = imgA.shape
+    output = cv2.resize(output, (W, H))
 
     # x2, y2, x1, y1 = model.location_to_crop()
     # output = np.concatenate([imgB[x2:], model.face[x2:], output[x2:]], axis=1)
