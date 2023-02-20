@@ -47,8 +47,8 @@ def home(request):
     return render(request, '/')
 
 class ProfileDetailView(View):
-    def get(self, request):
-        user = get_object_or_404(User, pk=request.user.pk)
+    def get(self, request,  *args, **kwargs):
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
         return render(request, 'accounts/profile.html', {"profile_user":user})
 
 class ProfileUpdateView(View):

@@ -52,7 +52,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a href="{% url 'accounts:profile' %}" class="nav-link">Welcone, {{ user.get_username }}</a></li>
+                        <li class="nav-item"><a href="{% url 'accounts:profile' pk=user.id %}" class="nav-link">Welcone, {{ user.get_username }}</a></li>
                         <li class="nav-item"><a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a></li>
                         <form class="d-flex">
                             <button class="btn btn-outline-dark" type="submit">
