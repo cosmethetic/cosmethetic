@@ -9,7 +9,7 @@ from PIL import Image
 
 import time
 import argparse
-
+from collections import defaultdict
 
 class TryOnModel:
     model = None
@@ -19,6 +19,10 @@ class TryOnModel:
         print('CUDA_VISIBLE_DEVICES', os.environ['CUDA_VISIBLE_DEVICES'])
         
         self.model = self._load_CPM_model()
+        
+        # alias func
+        self.bsn = os.path.basename
+        
 
     def _load_CPM_model(self):
         if TryOnModel.model == None:
@@ -29,8 +33,6 @@ class TryOnModel:
             print(f'model loading time: {1000*(t2-t1):.4f}ms')
          
         return TryOnModel.model
-            
-        
 
     def _color_makeup(self, model,A_txt, B_txt, alpha):
         color_txt = model.makeup(A_txt, B_txt)
@@ -46,15 +48,23 @@ class TryOnModel:
         pattern = model.blend_imgs(model.face, pattern, alpha=1)
         return pattern
 
-    def _get_textureAB(self, imgA, imgB):
-        t1 = time.perf_counter()
+    def __get_textureA(self, imgA):
         self.model.prn_process(imgA)
         A_txt = self.model.get_texture()
+        return A_txt
+    
+    def __get_textureB(self, imgB):
         B_txt = self.model.prn_process_target(imgB)
+        return B_txt
+
+    def _get_textureAB(self, imgA, imgB):
+        t1 = time.perf_counter()
+        A_txt = self.__get_textureA(imgA)
+        B_txt = self.__get_textureB(imgB)
         t2 = time.perf_counter()
         print(f'preprocessing time: {1000*(t2-t1):.4f}ms')
         return A_txt, B_txt
-       
+    
     def _get_makeup(self, A_txt, B_txt, args):
         t1 = time.perf_counter()
         if args.color_only:
@@ -83,7 +93,26 @@ class TryOnModel:
         imgB = np.array(Image.open(style_path))
         imgB = cv2.resize(imgB, (256, 256))
 
-        A_txt, B_txt = self._get_textureAB(imgA, imgB)
+        # Check whether textures of input_path, style_path images exists
+        # textures are stored at /CPM/imgs/textures <- it should be changed to 'static' path
+        
+        # for A
+        txt_path_A = os.path.join("CPM", "imgs", "textures", self.bsn(input_path))
+        if os.path.isfile(txt_path_A): 
+            A_txt = np.array(Image.open(txt_path_A))
+        else: 
+            A_txt = self.__get_textureA(imgA)
+            Image.fromarray(A_txt).save(txt_path_A)
+        
+        # for B
+        txt_path_B = os.path.join("CPM", "imgs", "textures", self.bsn(style_path))
+        if os.path.isfile(txt_path_B): 
+            B_txt = np.array(Image.open(txt_path_B))
+        else: 
+            B_txt = self.__get_textureB(imgB)
+            Image.fromarray(B_txt).save(txt_path_B)     
+            
+        # A_txt, B_txt = self._get_textureAB(imgA, imgB)
         output = self._get_makeup(A_txt, B_txt, args)
         
         # Restore its original size
