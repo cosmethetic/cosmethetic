@@ -9,6 +9,10 @@ from django.views.generic.detail import DetailView
 from django.views import View
 from .forms import UserForm, ProfileForm
 
+from reservations.models import Reservation
+from makeups.models import Makeup
+from orders.models import Order
+
 
 def signup(request):
     if request.method == 'POST':
@@ -49,7 +53,22 @@ def home(request):
 class ProfileDetailView(View):
     def get(self, request,  *args, **kwargs):
         user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return render(request, 'accounts/profile.html', {"profile_user":user})
+
+        makeups = Makeup.objects.filter(author = user)
+        orders = Order.objects.filter(user = user)
+
+        reservated = Reservation.objects.filter(makeup__author = user)
+        reservation = Reservation.objects.filter(user = user)
+
+        context = {
+            "profile_user" : user,
+            "makeup_list" : makeups, 
+            "order_list": orders,
+            "reservated_list" : reservated, 
+            "reservation_list" : reservation,
+        }
+        
+        return render(request, 'accounts/profile.html', context)
 
 class ProfileUpdateView(View):
     def get(self, request):
