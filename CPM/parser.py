@@ -20,12 +20,19 @@ def get_args():
     parser.add_argument(
         "--style_dir",
         type=str,
-        default="/home/hbk/media/temp/cosmethetic/CPM/imgs/reference",
+        default="/home/hbk/media/temp/cosmethetic/CPM/imgs/newstyle",
+        help="Path to style image dir (makeup style | reference image)",
+    )
+    parser.add_argument(
+        "--style",
+        type=str,
+        default="/home/hbk/media/temp/cosmethetic/CPM/imgs/reference/newstyle",
         help="Path to style image (makeup style | reference image)",
     )
     parser.add_argument("--alpha", type=float, default=0.5, help="opacity of color makeup")
     parser.add_argument("--savedir", type=str, default="/home/hbk/media/temp/cosmethetic/CPM/infer_results")
 
+    parser.add_argument("--filename", type=str, default="result.png")
     args = parser.parse_args()
 
     print("           ⊱ ──────ஓ๑♡๑ஓ ────── ⊰")

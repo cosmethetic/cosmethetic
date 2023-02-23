@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import AvailabilityForm
+from .forms import AvailabilityForm, AcceptForm
 from makeups.models import Makeup
 from reservations.models import Reservation
 from .reserve_functions.cal_reserve_fee import find_total_reserve_fee
@@ -55,3 +55,29 @@ class MakeupDetailView(View):
 
         return HttpResponse(
             "<script>alert('유효하지 않은 전송입니다. :(');location.href='/';</script>")
+
+@method_decorator(login_required, name="dispatch")
+class ReservationDetailView(View):
+    def get(self, request, *args, **kwargs):
+        reservation = get_object_or_404(Reservation, pk=self.kwargs['pk'])
+        form = AcceptForm()
+
+        context = {
+            'reservation': reservation,
+            'form': form,
+        }
+        return render(request, 'reservations/reservation_detail.html', context)
+
+    def post(self, request, *args, **kwargs):
+        reservation = get_object_or_404(Reservation, pk=self.kwargs['pk'])
+        form = AcceptForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            reservation.status = data['status']
+            reservation.save()
+            return redirect('reservations:reservation_detail', pk=reservation.pk)
+        else:
+            return HttpResponse(
+                "<script>alert('상태 변경에 실패했습니다! 유효한 입력으로 시도해주세요. :)');location.href='/reservations/'" + reservation.pk + ";</script>")
+        return HttpResponse(
+            "<script>alert('상태 변경에 실패했습니다! 유효한 입력으로 시도해주세요. :)');location.href='/reservations/'" + reservation.pk + ";</script>")
