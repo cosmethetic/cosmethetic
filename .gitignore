@@ -1,3 +1,4 @@
+
 # Created by https://www.toptal.com/developers/gitignore/api/django,python,macos,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python,macos,pycharm+all
 
@@ -382,3 +383,5 @@ poetry.toml
 .ruff_cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,macos,pycharm+all
+
+__pycache__/

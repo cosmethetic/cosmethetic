@@ -1,7 +1,7 @@
 import argparse
 
 
-def get_args():
+def get_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint_pattern", default="/home/hbk/media/temp/cosmethetic/CPM/checkpoints/pattern.pth", type=str)
     parser.add_argument("--checkpoint_color", default="/home/hbk/media/temp/cosmethetic/CPM/checkpoints/color.pth", type=str)
@@ -30,10 +30,10 @@ def get_args():
         help="Path to style image (makeup style | reference image)",
     )
     parser.add_argument("--alpha", type=float, default=0.5, help="opacity of color makeup")
-    parser.add_argument("--savedir", type=str, default="/home/hbk/media/temp/cosmethetic/CPM/infer_results")
+    parser.add_argument("--savedir", type=str, default=".")
+    parser.add_argument("--filename", type=str, default="-")
 
-    parser.add_argument("--filename", type=str, default="result.png")
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     print("           ⊱ ──────ஓ๑♡๑ஓ ────── ⊰")
     print("🎵 hhey, arguments are here if you need to check 🎵")

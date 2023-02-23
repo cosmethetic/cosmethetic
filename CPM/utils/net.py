@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils.spectral_norm import spectral_norm as SpectralNorm
+from CPM.utils.spectral_norm import spectral_norm as SpectralNorm
 
 
 # Defines the GAN loss which uses either LSGAN or the regular GAN.
