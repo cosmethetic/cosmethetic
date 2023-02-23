@@ -29,6 +29,85 @@
                 </div>
             </div>
         </div>
+        <h4>등록한 메이크업 레퍼런스</h4>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for makeup in makeup_list %}
+              <tr>
+                <th scope="row">{{ makeup.id }}</th>
+                <td>{{ makeup.title }}</td>
+                <td>{{ makeup.author.profile.nickname }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>   
+          
+          <br />
+
+          {% if user == profile_user %}
+          <h4>예약 리스트</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">예약자</th>
+                <th scope="col">아티스트</th>
+                <th scope="col">시작 시간</th>
+                <th scope="col">종료 시간</th>
+                <th scope="col">예약 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for reservation in reservation_list %}
+              <tr>
+                <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}">{{ reservation.id }}</a></th>
+                <td>{{ reservation.user.profile.nickname }}</td>
+                <td>{{ reservation.makeup.author.profile.nickname }}</td>
+                <td>{{ reservation.start_time }}</td>
+                <td>{{ reservation.end_time }}</td>
+                <td>{{ reservation.get_status_display }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          <br />
+
+          <h4>예약 요청 리스트</h4>
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">예약자</th>
+                  <th scope="col">아티스트</th>
+                  <th scope="col">시작 시간</th>
+                  <th scope="col">종료 시간</th>
+                  <th scope="col">예약 상태</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for reservation in reservated_list %}
+                <tr>
+                  <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}">{{ reservation.id }}</a></th>
+                  <td>{{ reservation.user.profile.nickname }}</td>
+                  <td>{{ reservation.makeup.author.profile.nickname }}</td>
+                  <td>{{ reservation.start_time }}</td>
+                  <td>{{ reservation.end_time }}</td>
+                  <td>{{ reservation.get_status_display }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>  
+            
+        {% endif %}
+
     </div>
     </br>
 {% endblock %}
