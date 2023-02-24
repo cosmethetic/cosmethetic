@@ -9,7 +9,7 @@
             </div>
             <div class="col-8">
                     <h3>{{ makeup.title }}</h3>
-                    <h5><a href="{% url 'accounts:profile' pk=makeup.author.id %}">{{ makeup.author.profile.nickname }}</a> 아티스트</h5>
+                    <h5><a href="{% url 'accounts:profile' pk=makeup.author.id %}" style="color: black">{{ makeup.author.profile.nickname }}</a> 아티스트</h5>
                     <h7>{{ makeup.price }} 원/시간 </h7>
                     <hr />
                     <p>{{ makeup.detail }}</p>
