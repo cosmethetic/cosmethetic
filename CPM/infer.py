@@ -70,7 +70,7 @@ class TryOnModel:
             mask = (mask > 0.001).astype("uint8")
             new_txt = color_txt * (1 - mask)[:, :, np.newaxis] + B_txt * mask[:, :, np.newaxis]
             output = self.model.render_texture(new_txt)
-            output = self.model.blend_imgs(self.model.face, output, alpha=1)
+            output = self.model.blend_imgs(self.model.face, output, alpha=0.5)
         t2 = time.perf_counter()
         print(f'inference time: {1000*(t2-t1):.4f}ms')
         return output
@@ -101,7 +101,10 @@ class TryOnModel:
         if os.path.isfile(txt_path_B): 
             B_txt = np.array(Image.open(txt_path_B))
         else: 
-            raise FileNotFoundError("Input image is not prepared please wait 10seconds")
+            # Need to refactor. path is hard coded
+            txt_path_B = os.path.join("CPM", "imgs", "textures", self.bsn(style_path))
+            B_txt = self.get_textureB(imgB)
+            Image.fromarray(B_txt).save(txt_path_B)  
             
         output = self._get_makeup(A_txt, B_txt, args)
         
