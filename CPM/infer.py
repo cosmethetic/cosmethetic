@@ -1,15 +1,14 @@
 import os
-
-from CPM.parser import get_args
-
 import cv2
 import numpy as np
+import time
+import threading
+
 from CPM.makeup import Makeup
+from CPM.parser import get_args
 from PIL import Image
 
-import time
-import argparse
-from collections import defaultdict
+
 
 class TryOnModel:
     model = None
@@ -48,23 +47,15 @@ class TryOnModel:
         pattern = model.blend_imgs(model.face, pattern, alpha=1)
         return pattern
 
-    def __get_textureA(self, imgA):
+    def get_textureA(self, imgA):
         self.model.prn_process(imgA)
         A_txt = self.model.get_texture()
         return A_txt
     
-    def __get_textureB(self, imgB):
+    def get_textureB(self, imgB):
         B_txt = self.model.prn_process_target(imgB)
         return B_txt
 
-    def _get_textureAB(self, imgA, imgB):
-        t1 = time.perf_counter()
-        A_txt = self.__get_textureA(imgA)
-        B_txt = self.__get_textureB(imgB)
-        t2 = time.perf_counter()
-        print(f'preprocessing time: {1000*(t2-t1):.4f}ms')
-        return A_txt, B_txt
-    
     def _get_makeup(self, A_txt, B_txt, args):
         t1 = time.perf_counter()
         if args.color_only:
@@ -101,18 +92,15 @@ class TryOnModel:
         if os.path.isfile(txt_path_A): 
             A_txt = np.array(Image.open(txt_path_A))
         else: 
-            A_txt = self.__get_textureA(imgA)
-            Image.fromarray(A_txt).save(txt_path_A)
+            raise FileNotFoundError("Input image is not prepared please wait 10seconds")
         
         # for B
         txt_path_B = os.path.join("CPM", "imgs", "textures", self.bsn(style_path))
         if os.path.isfile(txt_path_B): 
             B_txt = np.array(Image.open(txt_path_B))
         else: 
-            B_txt = self.__get_textureB(imgB)
-            Image.fromarray(B_txt).save(txt_path_B)     
+            raise FileNotFoundError("Input image is not prepared please wait 10seconds")
             
-        # A_txt, B_txt = self._get_textureAB(imgA, imgB)
         output = self._get_makeup(A_txt, B_txt, args)
         
         # Restore its original size
@@ -129,3 +117,32 @@ class TryOnModel:
         save_path = "저장 완료"
 
         print("Completed 👍 Please check result in: {}".format(save_path))
+
+class TexturePreprocessingThread(threading.Thread):
+    def __init__(self, img_path, type):
+        """_summary_
+        Args:
+            type (string): "A" or "B". "A" means profile image, "B" means makeup style image
+        """
+        self.type = type
+        self.img_path = os.path.join("CPM", "imgs", img_path)
+        self.model = TryOnModel()
+        self.bsn = os.path.basename
+        super().__init__()
+
+    def run(self):
+        print(f"preprocessing start: {self.img_path}")
+        img = np.array(Image.open(self.img_path))
+        if self.type == "A":
+            # Need to refactor. path is hard coded
+            txt_path_A = os.path.join("CPM", "imgs", "textures", self.bsn(self.img_path))
+            A_txt = self.model.get_textureA(img)
+            Image.fromarray(A_txt).save(txt_path_A)
+        elif self.type == "B":
+            # Need to refactor. path is hard coded
+            txt_path_B = os.path.join("CPM", "imgs", "textures", self.bsn(self.img_path))
+            B_txt = self.model.get_textureB(img)
+            Image.fromarray(B_txt).save(txt_path_B)  
+        else:
+            raise RuntimeError(f"type: {self.type}. type must be A or B.")
+        

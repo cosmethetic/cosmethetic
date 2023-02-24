@@ -9,10 +9,10 @@ from django.views.generic.detail import DetailView
 from django.views import View
 from .forms import UserForm, ProfileForm
 
+from CPM.infer import TexturePreprocessingThread
 from reservations.models import Reservation
 from makeups.models import Makeup
 from orders.models import Order
-
 
 def signup(request):
     if request.method == 'POST':
@@ -95,18 +95,30 @@ class ProfileUpdateView(View):
         u = User.objects.get(id=request.user.pk)
         user_form = UserForm(request.POST, instance=u)
 
+        print(f'u: {u}')
+        print(f'user_form: {user_form}')
+
         if user_form.is_valid():
+            print("user_form.is_valid")
             user_form.save()
 
         if hasattr(u, 'profile'):
+            print("hasattr")
             profile = u.profile
             profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         else:
             profile_form = ProfileForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
+            print("profile_form.is_valid()")
             profile = profile_form.save(commit=False)
             profile.user = u
             profile.save()
+            
+            print(f'profile.image: {profile.image}')
+            
+            # preprocess registered profile image
+            preprocess_thread = TexturePreprocessingThread(str(profile.image), type="A")
+            preprocess_thread.start()
 
         return redirect('accounts:profile')
