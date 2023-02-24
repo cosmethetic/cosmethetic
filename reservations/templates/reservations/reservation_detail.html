@@ -4,6 +4,8 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
+</br>
+<div class="container">
 
     </br>
     <h1>Reservation Detail</h1>
@@ -17,12 +19,12 @@
 
           </div>
           <div class="col">
-            <a href="{% url 'makeups:makeup_detail' pk=reservation.makeup.id %}"><h3>메이크업 제목: {{ reservation.makeup.title }}</h3></a>
+            <a href="{% url 'makeups:makeup_detail' pk=reservation.makeup.id %}" style="color: black"><h3>메이크업 제목: {{ reservation.makeup.title }}</h3></a>
               <hr/>
-              <a href="{% url 'accounts:profile' pk=reservation.makeup.author.id %}"><p>아티스트: {{ reservation.makeup.author.profile.nickname }}</p></a>
+              <a href="{% url 'accounts:profile' pk=reservation.makeup.author.id %}" style="color: black"><p>아티스트: {{ reservation.makeup.author.profile.nickname }}</p></a>
             <p>아티스트 연락처: {{ reservation.user.email }}</p>
 
-            <a href="{% url 'accounts:profile' pk=reservation.user.id %}"><p>예약자: {{ reservation.user.profile.nickname }}</p></a>
+            <a href="{% url 'accounts:profile' pk=reservation.user.id %}" style="color: black"><p>예약자: {{ reservation.user.profile.nickname }}</p></a>
             <p>예약자 연락처: {{ reservation.user.email }}</p>
 
             <p>예약 시작 시간: {{ reservation.start_time }}</p>
@@ -37,13 +39,15 @@
       <form action="" method="POST">
           {{ form | crispy }}
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary mb-3">상태 변경</button>
+        <br />
+          <button type="submit" class="btn btn-outline-dark">상태 변경</button>
       </form>
     {% endif %}
 
           </div>
       </div>
     </div>
+  </div>
 
 </br>
 {% endblock %}

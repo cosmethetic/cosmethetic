@@ -67,7 +67,7 @@
             <tbody>
             {% for reservation in reservation_list %}
               <tr>
-                <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}">{{ reservation.id }}</a></th>
+                <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}" style="color: black">{{ reservation.id }}</a></th>
                 <td>{{ reservation.user.profile.nickname }}</td>
                 <td>{{ reservation.makeup.author.profile.nickname }}</td>
                 <td>{{ reservation.start_time }}</td>
@@ -95,7 +95,7 @@
               <tbody>
               {% for reservation in reservated_list %}
                 <tr>
-                  <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}">{{ reservation.id }}</a></th>
+                  <th scope="row"><a href="{% url 'reservations:reservation_detail' pk=reservation.id %}" style="color: black">{{ reservation.id }}</a></th>
                   <td>{{ reservation.user.profile.nickname }}</td>
                   <td>{{ reservation.makeup.author.profile.nickname }}</td>
                   <td>{{ reservation.start_time }}</td>
