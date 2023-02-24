@@ -9,6 +9,9 @@ from django.views.generic.detail import DetailView
 from django.views import View
 from .forms import UserForm, ProfileForm
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 from CPM.infer import TexturePreprocessingThread
 from reservations.models import Reservation
 from makeups.models import Makeup
@@ -121,4 +124,4 @@ class ProfileUpdateView(View):
             preprocess_thread = TexturePreprocessingThread(str(profile.image), type="A")
             preprocess_thread.start()
 
-        return redirect('accounts:profile')
+        return HttpResponseRedirect(reverse('accounts:profile', args=(request.user.pk,)))
