@@ -94,7 +94,6 @@ class TryOnModel:
         if os.path.isfile(txt_path_A): 
             A_txt = np.array(Image.open(txt_path_A))
         else: 
-            redire
             raise FileNotFoundError("Input image is not prepared please wait 10seconds")
         
         # for B
