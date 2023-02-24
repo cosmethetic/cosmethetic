@@ -13,7 +13,7 @@
                     <h7>{{ makeup.price }} 원/시간 </h7>
                     <hr />
                     <p>{{ makeup.detail }}</p>
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.profile.image.src != null %}
                     <a href="{% url 'makeups:virtual_makeup' pk=makeup.id %}"><button type="button" class="btn btn-dark">메이크업 해보기</button></a>
                     {% endif %}
                     {% if makeup.author != request.user %}
