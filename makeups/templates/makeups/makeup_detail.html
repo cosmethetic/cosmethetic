@@ -4,22 +4,45 @@
     </br>
     <div class="container">
         <div class="row">
-            <div class="col">
-                <p><img src="{{ object.image.url }}" class="img-thumbnail"></p>
+            <div class="col-4">
+                <p><img src="{{ makeup.image.url }}" class="img-thumbnail"></p>
             </div>
             <div class="col-8">
-                <div class="col">
-                    <h3>{{ object.title }}</h3>
+                    <h3>{{ makeup.title }}</h3>
+                    <h5><a href="{% url 'accounts:profile' pk=makeup.author.id %}">{{ makeup.author.profile.nickname }}</a> 아티스트</h5>
+                    <h7>{{ makeup.price }} 원/시간 </h7>
                     <hr />
-                    <p>{{ object.detail }}</p>
+                    <p>{{ makeup.detail }}</p>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'makeups:virtual_makeup' pk=object.id %}"><button type="button" class="btn btn-dark">메이크업 해보기</button></a>
-                    <!-- <button type="button" class="btn btn-outline-dark">연락하기</button> -->
+                    <a href="{% url 'makeups:virtual_makeup' pk=makeup.id %}"><button type="button" class="btn btn-dark">메이크업 해보기</button></a>
                     {% endif %}
-                </div>
-            </div>
+                    {% if makeup.author != request.user %}
+                    <hr/>
+                    <center>
+                        <form id="reservation-form" action="" method="POST">
+                            {% csrf_token %}
+                            <div class="input-div">
+                                    <label for="id_start_time">예약 시간 : </label>
+                                    <input type="datetime-local" id="id_start_time" name="start_time">
+                                </div>
+            
+                                <br/>
+            
+                                <!-- Input Div -->
+                                <div class="input-div">
+                                    <label for="id_end_time">종료 예정 시간 : </label>
+                                    <input type="datetime-local" id="id_end_time" name="end_time">
+                                </div>
+            
+                            <div class="input-div">
+                            <br/>
+                            <button type="submit" class="btn btn-dark">메이크업 예약하기</button>
+                            </div>
+                        </form>
+                    </center>
+                    {% endif %}  
+            </div>          
         </div>
-    
 
         <section class="py-5">
             <h3>사용 제품</h3>
@@ -48,6 +71,7 @@
                             </div>
                         </div>
                     </div>
+                    <br/>
                 {% endfor %}
 
             </div>

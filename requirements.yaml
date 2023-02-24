@@ -194,4 +194,3 @@ dependencies:
     - types-cryptography==3.3.23
     - typing-extensions==4.3.0
     - urllib3==1.26.12
-prefix: /home/joono/anaconda3/envs/cpm

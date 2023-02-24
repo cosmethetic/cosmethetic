@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'products', 
     'carts', 
     'orders', 
+    'reservations', 
+    'reservations.reserve_functions',
 
     'allauth',
     'allauth.account',
