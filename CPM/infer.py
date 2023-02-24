@@ -8,6 +8,8 @@ from CPM.makeup import Makeup
 from CPM.parser import get_args
 from PIL import Image
 
+from django.shortcuts import render
+
 
 
 class TryOnModel:
@@ -92,6 +94,7 @@ class TryOnModel:
         if os.path.isfile(txt_path_A): 
             A_txt = np.array(Image.open(txt_path_A))
         else: 
+            redire
             raise FileNotFoundError("Input image is not prepared please wait 10seconds")
         
         # for B
@@ -145,4 +148,5 @@ class TexturePreprocessingThread(threading.Thread):
             Image.fromarray(B_txt).save(txt_path_B)  
         else:
             raise RuntimeError(f"type: {self.type}. type must be A or B.")
+        print(f"preprocessing done: {self.img_path}")
         

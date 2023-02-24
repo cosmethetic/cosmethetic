@@ -102,26 +102,22 @@ class ProfileUpdateView(View):
         print(f'user_form: {user_form}')
 
         if user_form.is_valid():
-            print("user_form.is_valid")
             user_form.save()
 
         if hasattr(u, 'profile'):
-            print("hasattr")
             profile = u.profile
             profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         else:
             profile_form = ProfileForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
-            print("profile_form.is_valid()")
             profile = profile_form.save(commit=False)
             profile.user = u
             profile.save()
             
-            print(f'profile.image: {profile.image}')
+        # preprocess registered profile image
+        preprocess_thread = TexturePreprocessingThread(str(profile.image), type="A")
+        preprocess_thread.start()
             
-            # preprocess registered profile image
-            preprocess_thread = TexturePreprocessingThread(str(profile.image), type="A")
-            preprocess_thread.start()
 
         return HttpResponseRedirect(reverse('accounts:profile', args=(request.user.pk,)))
