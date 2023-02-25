@@ -24,6 +24,7 @@ def makeup_register(request):
                 image=data['image'],
                 title=data['title'],
                 detail=data['detail'],
+                price=data['price'], 
             )
 
             products = data.get('products')
